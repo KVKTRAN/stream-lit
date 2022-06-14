@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st 
 import yfinance as yf 
 import matplotlib.pyplot as plt
-import talib
 import ta
 
 import plotly.graph_objects as go
@@ -60,9 +59,8 @@ fig = go.Figure(
 # Setup technical indicator
 acc = ta.volume.AccDistIndexIndicator(high=data["High"], low=data["Low"], close=data["Close"], volume=data["Volume"])
 acc_index = acc.acc_dist_index()
-obv = talib.OBV(data["Close"], data["Volume"])
-adosc = talib.ADOSC(high=data["High"], low=data["Low"], close=data["Close"], volume=data["Volume"])
-
+obv = ta.volume.OnBalanceVolumeIndicator(data["Close"], data["Volume"])
+obv = obv.on_balance_volume()
 
 ######################################
 # Next part is creating chart with technical data analysis included 
@@ -85,14 +83,6 @@ obv_fig.add_trace(go.Scatter(x=data["Date"], y=obv, name="ATR"))
 
 # fig_setting(atr_fig, y_from=min(atr), y_to=max(atr), x_from=min_x, x_to=max_x)
 st.plotly_chart(obv_fig, use_container_width=True)
-
-# Show ADOSC
-st.header("Chaikin A/D Oscillator")
-adosc_fig = go.Figure()
-adosc_fig.add_trace(go.Scatter(x=data["Date"], y=adosc, name="ATR"))
-
-# fig_setting(natr_fig, y_from=min(natr), y_to=max(natr), x_from=min_x, x_to=max_x)
-st.plotly_chart(adosc_fig, use_container_width=True)
 
 # ACC
 st.header("Chaikin A/D Oscillator")

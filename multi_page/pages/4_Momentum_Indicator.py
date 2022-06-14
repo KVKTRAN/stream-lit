@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st 
 import yfinance as yf 
 import matplotlib.pyplot as plt
-import talib
 import ta
 
 import plotly.graph_objects as go
@@ -58,10 +57,18 @@ fig = go.Figure(
 )
 
 # Setup technical indicator
-cci = talib.CCI(high=data["High"], low=data["Low"], close=data["Close"])
-rsi = talib.RSI(data["Close"])
-slowk, slowd = talib.STOCH(high=data["High"], low=data["Low"], close=data["Close"])
+# cci = talib.CCI(high=data["High"], low=data["Low"], close=data["Close"])
+# rsi = talib.RSI(data["Close"])
+# slowk, slowd = talib.STOCH(high=data["High"], low=data["Low"], close=data["Close"])
 
+cci = ta.trend.CCIIndicator(high=data["High"], low=data["Low"], close=data["Close"])
+rsi = ta.momentum.RSIIndicator(close=data["Close"])
+stoch = ta.momentum.StochasticOscillator(high=data["High"], low=data["Low"], close=data["Close"])
+
+cci = cci.cci()
+rsi = rsi.rsi()
+slowk = stoch.stoch()
+slowd = stoch.stoch_signal()
 
 ######################################
 # Next part is creating chart with technical data analysis included 

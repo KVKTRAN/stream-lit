@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st 
 import yfinance as yf 
 import matplotlib.pyplot as plt
-import talib
 import ta
 
 import plotly.graph_objects as go
@@ -58,8 +57,10 @@ fig = go.Figure(
 )
 
 # Setup technical indicator
-atr = talib.ATR(high=data["High"], low=data["Low"], close=data["Close"], timeperiod=14)
-natr = talib.NATR(high=data["High"], low=data["Low"], close=data["Close"], timeperiod=14)
+# atr = talib.ATR(high=data["High"], low=data["Low"], close=data["Close"], timeperiod=14)
+# natr = talib.NATR(high=data["High"], low=data["Low"], close=data["Close"], timeperiod=14)
+atr = ta.volatility.AverageTrueRange(high=data["High"], low=data["Low"], close=data["Close"])
+atr = atr.average_true_range()
 
 
 ######################################
@@ -81,13 +82,13 @@ st.header("Average True Range")
 atr_fig = go.Figure()
 atr_fig.add_trace(go.Scatter(x=data["Date"], y=atr, name="ATR"))
 
-# fig_setting(atr_fig, y_from=min(atr), y_to=max(atr), x_from=min_x, x_to=max_x)
+fig_setting(atr_fig, y_from=min(atr), y_to=max(atr), x_from=0, x_to=len(atr))
 st.plotly_chart(atr_fig, use_container_width=True)
 
 # Show NATR
-st.header("Normalized Average True Range")
-natr_fig = go.Figure()
-natr_fig.add_trace(go.Scatter(x=data["Date"], y=natr, name="ATR"))
+# st.header("Normalized Average True Range")
+# natr_fig = go.Figure()
+# natr_fig.add_trace(go.Scatter(x=data["Date"], y=natr, name="ATR"))
 
-# fig_setting(natr_fig, y_from=min(natr), y_to=max(natr), x_from=min_x, x_to=max_x)
-st.plotly_chart(natr_fig, use_container_width=True)
+# # fig_setting(natr_fig, y_from=min(natr), y_to=max(natr), x_from=min_x, x_to=max_x)
+# st.plotly_chart(natr_fig, use_container_width=True)

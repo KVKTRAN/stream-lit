@@ -61,19 +61,24 @@ fig = go.Figure(
 
 # Setup technical indicator
 # Bollinger bands
-upperband, middleband, lowerband = talib.BBANDS(data['Close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
+bb = ta.volatility.BollingerBands(close=data['Close'])
+upperband = bb.bollinger_hband()
+middleband = bb.bollinger_mavg()
+lowerband = bb.bollinger_lband()
+# upperband, middleband, lowerband = talib.BBANDS(data['Close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=0)
 
 # parabolic
-parabolic = talib.SAR(high=data["High"], low=data["Low"])
-# psar = ta.trend.PSARIndicator(high=data['High'], low=data['Low'], close=data['Close'])
-# psar_df = pd.DataFrame()
-# psar_df['psar'] = parabolic
-# psar_df['up'] = psar.psar_up()
-# psar_df['down'] = psar.psar_down()
+# parabolic = talib.SAR(high=data["High"], low=data["Low"])
+psar = ta.trend.PSARIndicator(high=data['High'], low=data['Low'], close=data['Close'])
+parabolic = psar.psar()
+
 
 # macd
-macd, macdsignal, macdhist = talib.MACD(data['Close'], fastperiod=12, slowperiod=26, signalperiod=9)
-
+macd = ta.trend.MACD(close=data['Close'])
+macd_value = macd.macd()
+macdsignal = macd.macd_signal()
+macdhist = macd.macd_diff()
+# macdsignal, macdhist 
 
 ######################################
 # Next part is creating chart with technical data analysis included 
@@ -135,9 +140,9 @@ st.plotly_chart(p_fig, use_container_width=True)
 st.header("MACD")
 
 macd_fig = go.Figure()
-macd_fig.add_trace(go.Scatter(x=data['Date'], y=macd, mode="lines", name="macd"))
+macd_fig.add_trace(go.Scatter(x=data['Date'], y=macd_value, mode="lines", name="macd"))
 macd_fig.add_trace(go.Scatter(x=data['Date'], y=macdsignal, mode="lines", name="macd signal "))
 macd_fig.add_trace(go.Bar(x=data['Date'], y=macdhist, name="macd hist"))
 
-fig_setting(macd_fig, y_from=min(macd) - 2, y_to=max(macd) + 2, x_from=min_x, x_to=max_x)
+fig_setting(macd_fig, y_from=min(macd_value) - 2, y_to=max(macd_value) + 2, x_from=min_x, x_to=max_x)
 st.plotly_chart(macd_fig, use_container_width=True)
