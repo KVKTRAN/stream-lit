@@ -1,7 +1,6 @@
 streamlit
 pandas
 numpy
-talib
 ta
 matplotlib
 tensorflow
