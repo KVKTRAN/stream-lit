@@ -42,6 +42,11 @@ data = data.reset_index()
 st.title("Demo on stock data visualization")
 
 st.header("Stock data in table")
+st.markdown(
+    """
+    This is stock  price of Apple company. Ticker is AAPL
+    """
+)
 st.write(data)
 st.write(data.describe())
 
